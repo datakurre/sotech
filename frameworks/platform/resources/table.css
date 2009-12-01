@@ -1,0 +1,57 @@
+.st-table-view .st-header-view {
+  text-transform: capitalize;
+}
+
+.st-table-view .st-header-view.sc-button-view {
+  background-color: #efefef;
+  border-top: 1px solid #888888;
+  border-left: 1px solid #888888;
+  border-right: 1px solid #888888;
+}
+
+.st-table-view .st-header-view.focus {
+  background: white;
+}
+
+.st-table-view .st-header-view.sc-button-view img {
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  top: 4px;
+  right: 4px;
+  left: auto;
+}
+
+.st-table-view .st-header-view.sc-button-view.selected {
+  background-color: #e0e0e0;
+}
+
+.st-table-view .st-header-view.sc-button-view.selected img {
+	background-image: sc_static("images/sort-ascending.png");
+}
+
+.st-table-view .st-header-view.sc-button-view.selected.descending img {
+	background-image: sc_static("images/sort-descending.png");
+}
+
+.st-table-view .st-hide-scroll .sc-container-view {
+  right: 0px !important;
+}
+
+.st-table-view .sc-scroller-view {
+  width: 17px !important;
+}
+
+.st-table-view .st-hide-scroll .sc-scroller-view {
+  display: none !important;
+}
+
+.st-table-view .st-hide-disclosure .sc-outline {
+  left: 0 !important;
+}
+
+.st-table-view .sc-split-divider-view {
+  border-right: 1px solid #888888;
+  border-left: 1px solid #888888;
+  cursor: col-resize;
+}

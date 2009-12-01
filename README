@@ -1,0 +1,18 @@
+Quick and dirty table view for SproutCore.
+
+Has some support for both SC.ArrayController and SC.TreeController.
+
+Requires Endash.SplitView.
+
+Example of use:
+
+table: SoTech.TableView.design({
+  layout: { top: 0, right: 0, bottom: 0, left: 0 },
+  contentBinding: "MyApp.tableController.arrangedObjects",
+  selectionBinding: "MyApp.tableController.selection",
+  orderByBinding: "MyApp.tableController.orderBy",
+  contentIconKey: "icon",
+  hasContentIcon: YES,
+  contentValueKeys: "title type size date".w(),
+  contentValueWidths: [200, 80, 80, 80]
+})
