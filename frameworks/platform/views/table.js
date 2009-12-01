@@ -22,7 +22,7 @@
 // CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 // TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 // SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-/*globals SoTech Endash */
+/*globals SoTech Endash*/
 
 require('views/table_list');
 
@@ -105,12 +105,6 @@ SoTech.TableView = Endash.SplitView.extend(
     return this.get("childViews").some( function(column) {
       return !SC.none(column.rows) && column.rows.contentView.isFirstResponder ;
     }, this) ;
-  }.property(),
-
-  firstResponder: function() {
-    return this.get("childViews").find( function(column) {
-      return !SC.none(column.rows) && column.rows.contentView.isFirstResponder ;
-    }, this).rows.contentView ;
   }.property(),
 
   didBecomeFirstResponder: function() {

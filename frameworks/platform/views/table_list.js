@@ -22,13 +22,13 @@
 // CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 // TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 // SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-/*globals SoTech */
+/*globals SoTech*/
 
 /** @class
 
   SoTech.TableListView
 
-  @extends SC.View
+  @extends SC.ListView
 */
 SoTech.TableListView = SC.ListView.extend(
 /** @scope SoTech.TableListView.prototype */ {
@@ -36,8 +36,6 @@ SoTech.TableListView = SC.ListView.extend(
   // .parentView.parentView is SC.ScrollView
   // .parentView.parentView.parentView is SC.SplitViewPane
   // .parentView.parentView.parentView.parentView is SoTech.TableView
-  tableViewBinding: ".parentView.parentView.parentView.parentView",
-  
   contentBinding: ".parentView.parentView.parentView.parentView.content",
   selectionBinding: ".parentView.parentView.parentView.parentView.selection",
   canReorderContentBinding: ".parentView.parentView.parentView.parentView.canReorderContent",
