@@ -28,4 +28,4 @@
 # some of these settings, you should make changes to your project Buildfile 
 # instead.
 
-config :all, :required => [:platform]
+config :all, :required => [:platform, :endash]
