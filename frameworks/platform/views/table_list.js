@@ -40,7 +40,9 @@ SoTech.TableListView = SC.ListView.extend(
   selectionBinding: ".parentView.parentView.parentView.parentView.selection",
   canReorderContentBinding: ".parentView.parentView.parentView.parentView.canReorderContent",
   isDropTargetBinding: ".parentView.parentView.parentView.parentView.isDropTarget",
+  showAlternatingRowsBinding: ".parentView.parentView.parentView.parentView.showAlternatingRows",
   delegateBinding: ".parentView.parentView.parentView.parentView.delegate",
+
   textAlign: SC.ALIGN_RIGHT,
 
   exampleView: SC.ListItemView.extend({

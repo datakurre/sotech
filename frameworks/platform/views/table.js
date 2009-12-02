@@ -32,22 +32,25 @@ require('views/table_list');
 
   @extends Endash.SplitView
 */
-SoTech.TableView = Endash.SplitView.extend(
+SoTech.TableView = Endash.SplitView.extend(SC.Border,
 /** @scope SoTech.TableView.prototype */ {
 
-  acceptsFirstResponder: true,
-  
   classNames: "st-table-view".w(),
 
-  dividerThickness: 3,
+  listView: SoTech.TableListView,
+
+  acceptsFirstResponder: YES,
+
+  showAlternatingRows: YES,
+
+  dividerThickness: 5,
 
   dividerSpacing: 0,
-  
-  listView: SoTech.TableListView,
   
   init: function() {
     var contentValueWidths = this.get("contentValueWidths") || [], left = 0,
         contentValueAligns = this.get("contentValueAligns") || [];
+
     var columns = this.get("contentValueKeys").map( function(key) {
       var width = contentValueWidths.shiftObject() || 150; left += width;
       var align = contentValueAligns.shiftObject() || SC.ALIGN_LEFT;
@@ -57,20 +60,24 @@ SoTech.TableView = Endash.SplitView.extend(
 
     this["childViews"] = columns.map( function(column) {
       return SC.View.extend({
-        layout: { width: column.width, top: 0, bottom: 0, left: column.offset },
+        layout: { width: column.width, minWidth: 20,
+                  top: 0, bottom: 0, left: column.offset },
         childViews: "header rows".w(),
+
         header: SC.ButtonView.extend({
           layout: { height: 20, top: 0, right: 0, left: 0 },
           classNames: "st-header-view".w(),
           theme: "disclosure",
           sortKey: column.key,
           title: column.title.loc(),
+
           action: function() {
             var sortKey = this.get("sortKey") ;
             var orderBy = this.parentView.parentView.get("orderBy") ;
             this.parentView.parentView.set("orderBy", (orderBy == sortKey ? "%@ DESC" : "%@").fmt(sortKey)) ;
-            this.parentView.parentView.$(".st-header-view").removeClass("selected") ;
+            this.parentView.parentView.$(".st-header-view").removeClass("st-order-by") ;
           },
+
           render: function(context, firstTime) {
             context.push('<img src="', SC.BLANK_IMAGE_URL, '" class="button" alt="" />');
             context.push("<label>",this.get("title"),"</label>");
@@ -78,18 +85,20 @@ SoTech.TableView = Endash.SplitView.extend(
             var sortKey = this.get("sortKey") ;
             var orderBy = this.parentView.parentView.get("orderBy") ;
             if (!SC.none(orderBy) && orderBy.substring(0, sortKey.length) == sortKey) {
-              context.addClass("selected") ;
-              if (orderBy == sortKey) { context.removeClass("descending") ; }
-              else { context.addClass("descending") ; }
+              context.addClass("st-order-by") ;
+              if (orderBy == sortKey) { context.removeClass("st-descending") ; }
+              else { context.addClass("st-descending") ; }
             }
           }
         }),
+
         rows: SC.ScrollView.extend({
           layout: { top: 20, right: 0, bottom: 0, left: 0 },
           backgroundColor: "white",
           classNames: columns.indexOf(column) < columns.get("length") - 1 ?
                       "st-hide-scroll" : "st-show-scroll",
           verticalScrollOffsetBinding: ".parentView.parentView.verticalScrollOffset",
+
           contentView: columns.indexOf(column) === 0 ? this.listView.extend({
             contentIconKeyBinding: ".parentView.parentView.parentView.parentView.contentIconKey",
             hasContentIconBinding: ".parentView.parentView.parentView.parentView.hasContentIcon",
