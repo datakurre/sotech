@@ -46,10 +46,13 @@ SoTech.TableView = Endash.SplitView.extend(
   listView: SoTech.TableListView,
   
   init: function() {
-    var contentValueWidths = this.get("contentValueWidths"), left = 0;
+    var contentValueWidths = this.get("contentValueWidths") || [], left = 0,
+        contentValueAligns = this.get("contentValueAligns") || [];
     var columns = this.get("contentValueKeys").map( function(key) {
       var width = contentValueWidths.shiftObject() || 150; left += width;
-      return { key: key, title: "_%@".fmt(key), left: left-width, width: width } ;
+      var align = contentValueAligns.shiftObject() || SC.ALIGN_LEFT;
+      return { key: key, title: "_%@".fmt(key),
+               left: left-width, width: width, align: align } ;
     }) ;
 
     this["childViews"] = columns.map( function(column) {
@@ -90,10 +93,12 @@ SoTech.TableView = Endash.SplitView.extend(
           contentView: columns.indexOf(column) === 0 ? this.listView.extend({
             contentIconKeyBinding: ".parentView.parentView.parentView.parentView.contentIconKey",
             hasContentIconBinding: ".parentView.parentView.parentView.parentView.hasContentIcon",
-            contentValueKey: column.key
+            contentValueKey: column.key,
+            textAlign: column.align
           }) : this.listView.extend({
             classNames: "st-hide-disclosure",
-            contentValueKey: column.key
+            contentValueKey: column.key,
+            textAlign: column.align
           })
         })
       }) ;

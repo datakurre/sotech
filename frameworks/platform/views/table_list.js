@@ -41,14 +41,23 @@ SoTech.TableListView = SC.ListView.extend(
   canReorderContentBinding: ".parentView.parentView.parentView.parentView.canReorderContent",
   isDropTargetBinding: ".parentView.parentView.parentView.parentView.isDropTarget",
   delegateBinding: ".parentView.parentView.parentView.parentView.delegate",
+  textAlign: SC.ALIGN_RIGHT,
+
+  exampleView: SC.ListItemView.extend({
+    textAlignBinding: ".parentView.textAlign",
+    render: function(context, firstTime) { sc_super();
+      var textAlign = this.get("textAlign") || SC.ALIGN_LEFT ;
+      context.addStyle('text-align',  this.get('textAlign')) ;
+    }
+  }),
 
   render: function(context, firstTime) { sc_super() ;
     context.setClass("focus", this.parentView.parentView.parentView.parentView.get("hasFirstResponder")) ;
   },
-  didBecomeFirstResponder: function() { sc_super() ;
+  didBecomeFirstResponder: function() { sc_super() ;
     this.parentView.parentView.parentView.parentView.$(".sc-list-view").addClass("focus") ;
   },
-  willLoseFirstResponder: function() { sc_super() ;
+  willLoseFirstResponder: function() { sc_super() ;
     this.parentView.parentView.parentView.parentView.$(".sc-list-view").removeClass("focus") ;
   }
 }) ;
