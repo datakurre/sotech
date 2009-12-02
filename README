@@ -1,22 +1,6 @@
-Quick and dirty table view for SproutCore.
+SproutCore Framework (sotech extensions)
 
-It has some support for both SC.ArrayController and SC.TreeController.
+This is a placeholder framework for releasing some code developed in
+SoTech Platform Project (by Asko Soukka) for the Sproutcore framework.
 
-The view creates one SC.ScrollView + SC.ListView -pair for every column and glues them to use the same object controller (with the same selection), the same scroll value and look focused at the same time. This might not be the optimal approach for building a blazing fast table view, but this approach required very little extra code on top of SproutCore and Endash.SplitView and should enable all features in SC.ListView and SC.ListItemView (e.g. all cells can be made editable and also SC.TreeController is being supported).
-
-Of course, this is might be far from complete. For example, not all ListView-properties are bound yet and dragging feels uncomfortable, because it looks like only a single cell, not a complete row, is being dragged.
-
-Requires Endash.SplitView.
-
-Example of use:
-
-table: SoTech.TableView.design({
-  layout: { top: 0, right: 0, bottom: 0, left: 0 },
-  contentBinding: "MyApp.tableController.arrangedObjects",
-  selectionBinding: "MyApp.tableController.selection",
-  orderByBinding: "MyApp.tableController.orderBy",
-  contentIconKey: "icon",
-  hasContentIcon: YES,
-  contentValueKeys: "title type size date".w(),
-  contentValueWidths: [200, 80, 80, 80]
-})
+See also: http://wiki.github.com/datakurre/sotech
