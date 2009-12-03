@@ -24,6 +24,7 @@
 // SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 /*globals SoTech Endash*/
 
+require('views/table_header');
 require('views/table_list');
 
 /** @class
@@ -37,6 +38,8 @@ SoTech.TableView = Endash.SplitView.extend(SC.Border,
 
   classNames: "st-table-view".w(),
 
+  headerView: SoTech.TableHeaderView,
+  
   listView: SoTech.TableListView,
 
   acceptsFirstResponder: YES,
@@ -46,6 +49,12 @@ SoTech.TableView = Endash.SplitView.extend(SC.Border,
   dividerThickness: 5,
 
   dividerSpacing: 0,
+  
+  contentValueWidths: [],
+  
+  contentValueAligns: [],
+  
+  contentValueKeys: [],
   
   init: function() {
     var contentValueWidths = this.get("contentValueWidths") || [], left = 0,
@@ -58,53 +67,35 @@ SoTech.TableView = Endash.SplitView.extend(SC.Border,
                left: left-width, width: width, align: align } ;
     }) ;
 
+    var headerView = this.get("headerView") ;
+    var listView = this.get("listView") ;
+
     this["childViews"] = columns.map( function(column) {
       return SC.View.extend({
         layout: { width: column.width, minWidth: 20,
                   top: 0, bottom: 0, left: column.offset },
         childViews: "header rows".w(),
 
-        header: SC.ButtonView.extend({
+        header: headerView.extend({ 
           layout: { height: 20, top: 0, right: 0, left: 0 },
-          classNames: "st-header-view".w(),
-          theme: "disclosure",
           sortKey: column.key,
-          title: column.title.loc(),
-
-          action: function() {
-            var sortKey = this.get("sortKey") ;
-            var orderBy = this.parentView.parentView.get("orderBy") ;
-            this.parentView.parentView.set("orderBy", (orderBy == sortKey ? "%@ DESC" : "%@").fmt(sortKey)) ;
-            this.parentView.parentView.$(".st-header-view").removeClass("st-order-by") ;
-          },
-
-          render: function(context, firstTime) {
-            context.push('<img src="', SC.BLANK_IMAGE_URL, '" class="button" alt="" />');
-            context.push("<label>",this.get("title"),"</label>");
-
-            var sortKey = this.get("sortKey") ;
-            var orderBy = this.parentView.parentView.get("orderBy") ;
-            if (!SC.none(orderBy) && orderBy.substring(0, sortKey.length) == sortKey) {
-              context.addClass("st-order-by") ;
-              if (orderBy == sortKey) { context.removeClass("st-descending") ; }
-              else { context.addClass("st-descending") ; }
-            }
-          }
+          title: column.title.loc()
         }),
 
         rows: SC.ScrollView.extend({
-          layout: { top: 20, right: 0, bottom: 0, left: 0 },
+          layout: { top: 21, right: 0, bottom: 0, left: 0 },
+          borderStyle: SC.BORDER_NONE,
           backgroundColor: "white",
           classNames: columns.indexOf(column) < columns.get("length") - 1 ?
                       "st-hide-scroll" : "st-show-scroll",
           verticalScrollOffsetBinding: ".parentView.parentView.verticalScrollOffset",
 
-          contentView: columns.indexOf(column) === 0 ? this.listView.extend({
+          contentView: columns.indexOf(column) === 0 ? listView.extend({
             contentIconKeyBinding: ".parentView.parentView.parentView.parentView.contentIconKey",
             hasContentIconBinding: ".parentView.parentView.parentView.parentView.hasContentIcon",
             contentValueKey: column.key,
             textAlign: column.align
-          }) : this.listView.extend({
+          }) : listView.extend({
             classNames: "st-hide-disclosure",
             contentValueKey: column.key,
             textAlign: column.align

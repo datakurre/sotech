@@ -1,24 +1,24 @@
-.sc-theme .st-table-view .sc-scroll-view.sc-gray-border {
-  border-left: none;
-  border-right: none;
-  border-bottom: none;
-}
-
 .st-table-view .st-header-view {
   text-transform: capitalize;
 }
 
 .st-table-view .st-header-view.sc-button-view {
   background-color: #EFEFEF;
+  border-bottom: 1px solid #888888;
+}
+
+.st-table-view .st-header-view.sc-button-view.st-order-by {
+  background-color: #EFEFEF;
+}
+
+.st-table-view .st-header-view.sc-button-view:hover {
+  background-color: #FFFFFF;
 }
 
 .sc-split-divider-view + .sc-split-view-pane > .st-header-view {
   border-left: 1px solid #888888;
 }
 
-.st-table-view .st-header-view.sc-button-view.st-order-by {
-  background-color: #E0E0E0;
-}
 
 .st-table-view .st-header-view.sc-button-view img {
   position: absolute;
