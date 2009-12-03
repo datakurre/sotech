@@ -32,16 +32,18 @@
 */
 SoTech.TableListView = SC.ListView.extend(
 /** @scope SoTech.TableListView.prototype */ {
-  // .parentView is SC.ContainerView
-  // .parentView.parentView is SC.ScrollView
-  // .parentView.parentView.parentView is SC.SplitViewPane
-  // .parentView.parentView.parentView.parentView is SoTech.TableView
+  // .parentView.parentView.parentView.parentView is
+  // [SC.ContainerView].[SC.ScrollView].[SC.SplitViewPane].[SoTech.TableView]
   contentBinding: ".parentView.parentView.parentView.parentView.content",
   selectionBinding: ".parentView.parentView.parentView.parentView.selection",
+
   canReorderContentBinding: ".parentView.parentView.parentView.parentView.canReorderContent",
   isDropTargetBinding: ".parentView.parentView.parentView.parentView.isDropTarget",
   showAlternatingRowsBinding: ".parentView.parentView.parentView.parentView.showAlternatingRows",
+
   delegateBinding: ".parentView.parentView.parentView.parentView.delegate",
+  targetBinding: ".parentView.parentView.parentView.parentView.target",
+  actionBinding: ".parentView.parentView.parentView.parentView.action",
 
   textAlign: SC.ALIGN_RIGHT,
 
