@@ -56,14 +56,19 @@ SoTech.TableView = Endash.SplitView.extend(SC.Border,
   
   contentValueKeys: [],
   
+  contentOrderableBy: [],
+  
   init: function() {
     var contentValueWidths = this.get("contentValueWidths") || [], left = 0,
-        contentValueAligns = this.get("contentValueAligns") || [];
+        contentValueAligns = this.get("contentValueAligns") || [],
+        contentOrderableBy = this.get("contentOrderableBy") || [];
 
     var columns = this.get("contentValueKeys").map( function(key) {
       var width = contentValueWidths.shiftObject() || 150; left += width;
       var align = contentValueAligns.shiftObject() || SC.ALIGN_LEFT;
+      var orderable = contentOrderableBy.shiftObject();
       return { key: key, title: "_%@".fmt(key),
+               orderable: SC.none(orderable) ? YES : orderable,
                left: left-width, width: width, align: align } ;
     }) ;
 
@@ -78,7 +83,7 @@ SoTech.TableView = Endash.SplitView.extend(SC.Border,
 
         header: headerView.extend({ 
           layout: { height: 20, top: 0, right: 0, left: 0 },
-          sortKey: column.key,
+          sortKey: column.orderable ? column.key : null,
           title: column.title.loc()
         }),
 

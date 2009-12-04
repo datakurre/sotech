@@ -40,9 +40,11 @@ SoTech.TableHeaderView = SC.ButtonView.extend(
 
   action: function() {
     var sortKey = this.get("sortKey") ;
-    var orderBy = this.parentView.parentView.get("orderBy") ;
-    this.parentView.parentView.set("orderBy", (orderBy == sortKey ? "%@ DESC" : "%@").fmt(sortKey)) ;
-    this.parentView.parentView.$(".st-header-view").removeClass("st-order-by") ;
+    if (sortKey) {
+      var orderBy = this.parentView.parentView.get("orderBy") ;
+      this.parentView.parentView.set("orderBy", (orderBy == sortKey ? "%@ DESC" : "%@").fmt(sortKey)) ;
+      this.parentView.parentView.$(".st-header-view").removeClass("st-order-by") ;
+    }
   },
 
   render: function(context, firstTime) {
@@ -50,12 +52,17 @@ SoTech.TableHeaderView = SC.ButtonView.extend(
     context.push("<label>",this.get("title"),"</label>") ;
 
     var sortKey = this.get("sortKey") ;
-    var orderBy = this.parentView.parentView.get("orderBy") ;
 
-    if (!SC.none(orderBy) && orderBy.substring(0, sortKey.length) == sortKey) {
-      context.addClass("st-order-by") ;
-      if (orderBy == sortKey) { context.removeClass("st-descending") ; }
-      else { context.addClass("st-descending") ; }
+    if (sortKey) {
+      context.addClass("st-orderable") ;
+
+      var orderBy = this.parentView.parentView.get("orderBy") ;
+
+      if (!SC.none(orderBy) && orderBy.substring(0, sortKey.length) == sortKey) {
+        context.addClass("st-order-by") ;
+        if (orderBy == sortKey) { context.removeClass("st-descending") ; }
+        else { context.addClass("st-descending") ; }
+      }
     }
   }
 }) ;

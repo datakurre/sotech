@@ -11,7 +11,7 @@
   background-color: #EFEFEF;
 }
 
-.st-table-view .st-header-view.sc-button-view:hover {
+.st-table-view .st-header-view.sc-button-view.st-orderable:hover {
   background-color: #FFFFFF;
 }
 
