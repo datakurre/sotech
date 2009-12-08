@@ -37,6 +37,8 @@ SoTech.TableListView = SC.ListView.extend(
   contentBinding: ".parentView.parentView.parentView.parentView.content",
   selectionBinding: ".parentView.parentView.parentView.parentView.selection",
 
+  canEditContentBinding: ".parentView.parentView.parentView.parentView.canEditContent",
+  canDeleteContentBinding: ".parentView.parentView.parentView.parentView.canDeleteContent",
   canReorderContentBinding: ".parentView.parentView.parentView.parentView.canReorderContent",
   isDropTargetBinding: ".parentView.parentView.parentView.parentView.isDropTarget",
   showAlternatingRowsBinding: ".parentView.parentView.parentView.parentView.showAlternatingRows",
