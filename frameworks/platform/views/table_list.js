@@ -48,6 +48,8 @@ SoTech.TableListView = SC.ListView.extend(
   targetBinding: ".parentView.parentView.parentView.parentView.target",
   actionBinding: ".parentView.parentView.parentView.parentView.action",
 
+  rowHeightBinding: ".parentView.parentView.parentView.parentView.rowHeight",
+
   textAlign: SC.ALIGN_LEFT,
 
   exampleView: SC.ListItemView.extend({

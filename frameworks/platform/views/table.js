@@ -46,6 +46,8 @@ SoTech.TableView = Endash.SplitView.extend(SC.Border,
 
   showAlternatingRows: YES,
 
+  rowHeight: 18,
+
   dividerThickness: 5,
 
   dividerSpacing: 0,
@@ -57,6 +59,8 @@ SoTech.TableView = Endash.SplitView.extend(SC.Border,
   contentValueKeys: [],
   
   contentOrderableBy: [],
+
+  localize: YES,
   
   init: function() {
     var contentValueWidths = this.get("contentValueWidths") || [], left = 0,
@@ -67,13 +71,13 @@ SoTech.TableView = Endash.SplitView.extend(SC.Border,
       var width = contentValueWidths.shiftObject() || 150; left += width;
       var align = contentValueAligns.shiftObject() || SC.ALIGN_LEFT;
       var orderable = contentOrderableBy.shiftObject();
-      return { key: key, title: "_%@".fmt(key),
-               orderable: SC.none(orderable) ? YES : orderable,
+      return { key: key, orderable: SC.none(orderable) ? YES : orderable,
                left: left-width, width: width, align: align } ;
     }) ;
 
     var headerView = this.get("headerView") ;
     var listView = this.get("listView") ;
+    var localize = this.get("localize") ;
 
     this["childViews"] = columns.map( function(column) {
       return SC.View.extend({
@@ -84,7 +88,7 @@ SoTech.TableView = Endash.SplitView.extend(SC.Border,
         header: headerView.extend({ 
           layout: { height: 20, top: 0, right: 0, left: 0 },
           sortKey: column.orderable ? column.key : null,
-          title: column.title.loc()
+          title: localize ? "_%@".fmt(column.key).loc() : column.key
         }),
 
         rows: SC.ScrollView.extend({
