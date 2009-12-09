@@ -39,15 +39,16 @@ SoTech.TableListView = SC.ListView.extend(
 
   canEditContentBinding: ".parentView.parentView.parentView.parentView.canEditContent",
   canDeleteContentBinding: ".parentView.parentView.parentView.parentView.canDeleteContent",
+  showAlternatingRowsBinding: ".parentView.parentView.parentView.parentView.showAlternatingRows",
+
   canReorderContentBinding: ".parentView.parentView.parentView.parentView.canReorderContent",
   isDropTargetBinding: ".parentView.parentView.parentView.parentView.isDropTarget",
-  showAlternatingRowsBinding: ".parentView.parentView.parentView.parentView.showAlternatingRows",
 
   delegateBinding: ".parentView.parentView.parentView.parentView.delegate",
   targetBinding: ".parentView.parentView.parentView.parentView.target",
   actionBinding: ".parentView.parentView.parentView.parentView.action",
 
-  textAlign: SC.ALIGN_RIGHT,
+  textAlign: SC.ALIGN_LEFT,
 
   exampleView: SC.ListItemView.extend({
     textAlignBinding: ".parentView.textAlign",
@@ -65,5 +66,12 @@ SoTech.TableListView = SC.ListView.extend(
   },
   willLoseFirstResponder: function() { sc_super() ;
     this.parentView.parentView.parentView.parentView.$(".sc-list-view").removeClass("focus") ;
+  },
+  _cv_dragViewFor: function(dragContent) {
+    // find only the indexes that are in both dragContent and nowShowing.
+    var indexes = this.get('nowShowing').without(dragContent);
+    indexes = this.get('nowShowing').without(indexes);
+
+    return this.parentView.parentView.parentView.parentView._sttv_dragViewFor(indexes, this) ;
   }
 }) ;
