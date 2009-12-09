@@ -24,8 +24,8 @@
 // SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 /*globals SoTech Endash*/
 
-require('views/table_header');
-require('views/table_list');
+require("views/table_header");
+require("views/table_list");
 
 /** @class
 
@@ -124,5 +124,55 @@ SoTech.TableView = Endash.SplitView.extend(SC.Border,
     if (selection && !selection.get("length")) {
       this.set("selection", this.get("selection").copy().add(this.get("content"),0,1)) ;
     }
+  },
+
+  _sttv_dragViewFor: function(indexes, context) {
+    var dragLayer = this.get("layer").cloneNode(false) ;
+    var view = SC.View.create({ layer: dragLayer, parentView: this }) ;
+
+    // collects the columns
+    var columns = this.childViews.filter(function(child) { return !SC.none(child.rows) ; }) ;
+    var columnIndexes = SC.IndexSet.create(0, columns.get("length")) ;
+
+    // cleanup weird stuff that might make the drag look out of place
+    SC.$(dragLayer).css("background-color", "transparent")
+      .css("border", "none")
+      .css("top", columns[0].rows.layout.top)
+      .css("left", 0) ;
+  
+    indexes.forEach(function(i) {
+      columnIndexes.forEach(function(ci) {
+        var itemView = columns[ci].rows.contentView.itemViewForContentIndex(i),
+            isSelected, layer ;
+
+        // render item view without isSelected state.  
+        if (itemView) {
+          isSelected = itemView.get("isSelected") ;
+          itemView.set("isSelected", NO) ;
+
+          itemView.updateLayerIfNeeded();
+          layer = itemView.get("layer");
+          if (layer) layer = layer.cloneNode(true);
+
+          // cleanup weird stuff that might make the drag look out of place
+          SC.$(layer).css("background-color", "transparent")
+                     .css("left", columns[ci].layout.left)
+                     .css("width", columns[ci].layout.width) ;
+          if (ci > 0) {
+            SC.$(layer).find("img").remove() ;
+            SC.$(layer).find("label").css("left", 0) ;          
+            SC.$(layer).find(".sc-outline").css("left", 0) ;          
+          }
+          itemView.set("isSelected", isSelected);
+          itemView.updateLayerIfNeeded();
+        }
+
+        if (layer) dragLayer.appendChild(layer);
+        layer = null;      
+      }) ;
+    }) ;
+
+    dragLayer = null ;
+    return view ;
   }
 });

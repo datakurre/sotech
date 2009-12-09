@@ -19,7 +19,6 @@
   border-left: 1px solid #888888;
 }
 
-
 .st-table-view .st-header-view.sc-button-view img {
   position: absolute;
   width: 12px;
@@ -51,6 +50,10 @@
 
 .st-table-view .st-hide-disclosure .sc-outline {
   left: 0 !important;
+}
+
+.st-table-view .st-hide-disclosure .sc-list-insertion-point {
+  left: 8px !important;
 }
 
 .st-table-view .sc-split-divider-view {
