@@ -126,15 +126,28 @@ SoTech.TableView = Endash.SplitView.extend(SC.Border,
     }
   },
 
+  columnIndexes: function() {
+    return SC.IndexSet.create(0, this.childViews.get("length")).filter(function(i) {
+        return !SC.none(this.childViews[i].rows) ;
+    }, this) ;    
+  }.property().cacheable(),
+
+  showInsertionPoint: function(itemView, dropOperation) {
+    this.get("columnIndexes").forEach(function(i) {
+      this.childViews[i].rows.contentView._showInsertionPoint(itemView, dropOperation) ;
+    }, this) ;
+  },
+
+  hideInsertionPoint: function(itemView, dropOperation) {
+    this.get("columnIndexes").forEach(function(i) {
+      this.childViews[i].rows.contentView._hideInsertionPoint(itemView, dropOperation) ;
+    }, this) ;
+  },
+
   // Modified from SC.CollectionView._cv_dragViewFor
   _tv_dragViewFor: function(indexes, context) {  
     var dragLayer = this.get("layer").cloneNode(false) ;
     var view = SC.View.create({ layer: dragLayer, parentView: this }) ;
-
-    // collect columns
-    var columnIndexes = SC.IndexSet.create(0, this.childViews.get("length")).filter(
-      function(i) { return !SC.none(this.childViews[i].rows) ; }, this
-    ) ;
 
     // cleanup weird stuff that might make the drag look out of place
     SC.$(dragLayer).css("backgroundColor", "transparent")
@@ -142,6 +155,9 @@ SoTech.TableView = Endash.SplitView.extend(SC.Border,
       .css("top", context.parentView.parentView.layout.top)
       .css("left", 0) ;
   
+    // collect column indexes
+    var columnIndexes = this.get("columnIndexes") ;
+
     indexes.forEach(function(i) {
       columnIndexes.forEach(function(ci) {
         var itemView = this.childViews[ci].rows.contentView.itemViewForContentIndex(i),
@@ -165,6 +181,7 @@ SoTech.TableView = Endash.SplitView.extend(SC.Border,
             SC.$(layer).find("label").css("left", 0) ;          
             SC.$(layer).find(".sc-outline").css("left", 0) ;          
           }
+
           itemView.set("isSelected", isSelected);
           itemView.updateLayerIfNeeded();
         }

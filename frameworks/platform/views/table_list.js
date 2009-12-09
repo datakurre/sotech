@@ -61,17 +61,36 @@ SoTech.TableListView = SC.ListView.extend(
   render: function(context, firstTime) { sc_super() ;
     context.setClass("focus", this.parentView.parentView.parentView.parentView.get("hasFirstResponder")) ;
   },
+
   didBecomeFirstResponder: function() { sc_super() ;
     this.parentView.parentView.parentView.parentView.$(".sc-list-view").addClass("focus") ;
   },
+
   willLoseFirstResponder: function() { sc_super() ;
     this.parentView.parentView.parentView.parentView.$(".sc-list-view").removeClass("focus") ;
   },
+
+  showInsertionPoint: function(itemView, dropOperation) {
+    this.parentView.parentView.parentView.parentView.showInsertionPoint(itemView, dropOperation) ;
+  },
+
+  hideInsertionPoint: function() {
+    this.parentView.parentView.parentView.parentView.hideInsertionPoint() ;
+  },
+
+  _showInsertionPoint: function(itemView, dropOperation) {
+    this.showInsertionPoint.base.apply(this, arguments);
+  },
+
+  _hideInsertionPoint: function(itemView, dropOperation) {
+    this.hideInsertionPoint.base.apply(this, arguments);
+  },
+
   _cv_dragViewFor: function(dragContent) {
     // find only the indexes that are in both dragContent and nowShowing.
-    var indexes = this.get('nowShowing').without(dragContent);
-    indexes = this.get('nowShowing').without(indexes);
-
+    var indexes = this.get('nowShowing').without(dragContent) ;
+    indexes = this.get('nowShowing').without(indexes) ;
+    // get a custom view from TableView
     return this.parentView.parentView.parentView.parentView._tv_dragViewFor(indexes, this) ;
   }
 }) ;
