@@ -177,7 +177,7 @@ SoTech.TableView = Endash.SplitView.extend(SC.Border,
                      .css("left", this.childViews[ci].layout.left)
                      .css("width", this.childViews[ci].layout.width) ;
           if (ci > 0) {
-            SC.$(layer).find("img").remove() ;
+            SC.$(layer).find("img.disclosure").remove() ;
             SC.$(layer).find("label").css("left", 0) ;          
             SC.$(layer).find(".sc-outline").css("left", 0) ;          
           }
