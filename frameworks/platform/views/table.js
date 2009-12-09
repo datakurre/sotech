@@ -126,23 +126,25 @@ SoTech.TableView = Endash.SplitView.extend(SC.Border,
     }
   },
 
-  _sttv_dragViewFor: function(indexes, context) {
+  // Modified from SC.CollectionView._cv_dragViewFor
+  _tv_dragViewFor: function(indexes, context) {  
     var dragLayer = this.get("layer").cloneNode(false) ;
     var view = SC.View.create({ layer: dragLayer, parentView: this }) ;
 
-    // collects the columns
-    var columns = this.childViews.filter(function(child) { return !SC.none(child.rows) ; }) ;
-    var columnIndexes = SC.IndexSet.create(0, columns.get("length")) ;
+    // collect columns
+    var columnIndexes = SC.IndexSet.create(0, this.childViews.get("length")).filter(
+      function(i) { return !SC.none(this.childViews[i].rows) ; }, this
+    ) ;
 
     // cleanup weird stuff that might make the drag look out of place
-    SC.$(dragLayer).css("background-color", "transparent")
+    SC.$(dragLayer).css("backgroundColor", "transparent")
       .css("border", "none")
-      .css("top", columns[0].rows.layout.top)
+      .css("top", context.parentView.parentView.layout.top)
       .css("left", 0) ;
   
     indexes.forEach(function(i) {
       columnIndexes.forEach(function(ci) {
-        var itemView = columns[ci].rows.contentView.itemViewForContentIndex(i),
+        var itemView = this.childViews[ci].rows.contentView.itemViewForContentIndex(i),
             isSelected, layer ;
 
         // render item view without isSelected state.  
@@ -156,8 +158,8 @@ SoTech.TableView = Endash.SplitView.extend(SC.Border,
 
           // cleanup weird stuff that might make the drag look out of place
           SC.$(layer).css("background-color", "transparent")
-                     .css("left", columns[ci].layout.left)
-                     .css("width", columns[ci].layout.width) ;
+                     .css("left", this.childViews[ci].layout.left)
+                     .css("width", this.childViews[ci].layout.width) ;
           if (ci > 0) {
             SC.$(layer).find("img").remove() ;
             SC.$(layer).find("label").css("left", 0) ;          
@@ -169,8 +171,8 @@ SoTech.TableView = Endash.SplitView.extend(SC.Border,
 
         if (layer) dragLayer.appendChild(layer);
         layer = null;      
-      }) ;
-    }) ;
+      }, this) ;
+    }, this) ;
 
     dragLayer = null ;
     return view ;

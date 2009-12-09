@@ -72,6 +72,6 @@ SoTech.TableListView = SC.ListView.extend(
     var indexes = this.get('nowShowing').without(dragContent);
     indexes = this.get('nowShowing').without(indexes);
 
-    return this.parentView.parentView.parentView.parentView._sttv_dragViewFor(indexes, this) ;
+    return this.parentView.parentView.parentView.parentView._tv_dragViewFor(indexes, this) ;
   }
 }) ;
