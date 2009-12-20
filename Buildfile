@@ -28,4 +28,12 @@
 # some of these settings, you should make changes to your project Buildfile 
 # instead.
 
-config :all, :required => [:platform, :endash]
+config :all, :required => [:table_view, :endash]
+
+mode :production do
+  config :endash,
+    :minify_javascript => false
+
+  config "sotech/table_view",
+    :minify_javascript => false
+end
