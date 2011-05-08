@@ -38,8 +38,14 @@
       }
     }
   }
-  .st-cursor .sc-list-item-view.sel {
-    outline: 1px dotted black;
+  .st-cursor .sc-list-item-view.sel .sc-outline:after {
+    position: absolute;
+    content: "";
+    top: 1px;
+    right: 1px;
+    bottom: 1px;
+    left: 0;
+    border: 1px dotted white;
   }
   .st-hide-scroll {
     .sc-scroller-view {
