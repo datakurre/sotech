@@ -32,23 +32,24 @@
 */
 SoTech.TableListView = SC.ListView.extend(
 /** @scope SoTech.TableListView.prototype */ {
-  // .parentView.parentView.parentView.parentView is
-  // [SC.ContainerView].[SC.ScrollView].[SC.SplitViewPane].[SoTech.TableView]
-  contentBinding: ".parentView.parentView.parentView.parentView.content",
-  selectionBinding: ".parentView.parentView.parentView.parentView.selection",
+  
+  contentBinding: ".table.content",
+  selectionBinding: ".table.selection",
 
-  canEditContentBinding: ".parentView.parentView.parentView.parentView.canEditContent",
-  canDeleteContentBinding: ".parentView.parentView.parentView.parentView.canDeleteContent",
-  showAlternatingRowsBinding: ".parentView.parentView.parentView.parentView.showAlternatingRows",
+  canEditContentBinding: ".table.canEditContent",
+  canDeleteContentBinding: ".table.canDeleteContent",
+  showAlternatingRowsBinding: ".table.showAlternatingRows",
 
-  canReorderContentBinding: ".parentView.parentView.parentView.parentView.canReorderContent",
-  isDropTargetBinding: ".parentView.parentView.parentView.parentView.isDropTarget",
+  canReorderContentBinding: ".table.canReorderContent",
+  isDropTargetBinding: ".table.isDropTarget",
 
-  delegateBinding: ".parentView.parentView.parentView.parentView.delegate",
-  targetBinding: ".parentView.parentView.parentView.parentView.target",
-  actionBinding: ".parentView.parentView.parentView.parentView.action",
+  delegateBinding: ".table.delegate",
+  targetBinding: ".table.target",
+  actionBinding: ".table.action",
 
-  rowHeightBinding: ".parentView.parentView.parentView.parentView.rowHeight",
+  rowHeightBinding: ".table.rowHeight",
+
+  isEnabledBinding: ".table.isEnabled",
 
   textAlign: SC.ALIGN_LEFT,
 
@@ -56,28 +57,32 @@ SoTech.TableListView = SC.ListView.extend(
     textAlignBinding: ".parentView.textAlign",
     render: function(context, firstTime) { sc_super();
       var textAlign = this.get("textAlign") || SC.ALIGN_LEFT;
-      context.addStyle('text-align',  this.get('textAlign'));
+      context.addStyle('text-align', textAlign);
     }
   }),
 
+  table: function() {
+    return this.getPath("parentView.parentView.parentView.parentView");
+  }.property().cacheable(),
+
   render: function(context, firstTime) { sc_super();
-    context.setClass("focus", this.parentView.parentView.parentView.parentView.get("hasFirstResponder"));
+    context.setClass("focus", this.getPath("table.hasFirstResponder"));
   },
 
   didBecomeFirstResponder: function() { sc_super();
-    this.parentView.parentView.parentView.parentView.$(".sc-list-view").addClass("focus");
+    this.get("table").$(".sc-list-view").addClass("focus");
   },
 
   willLoseFirstResponder: function() { sc_super();
-    this.parentView.parentView.parentView.parentView.$(".sc-list-view").removeClass("focus");
+    this.get("table").$(".sc-list-view").removeClass("focus");
   },
 
   showInsertionPoint: function(itemView, dropOperation) {
-    this.parentView.parentView.parentView.parentView.showInsertionPoint(itemView, dropOperation);
+    this.get("table").showInsertionPoint(itemView, dropOperation);
   },
 
   hideInsertionPoint: function() {
-    this.parentView.parentView.parentView.parentView.hideInsertionPoint();
+    this.get("table").hideInsertionPoint();
   },
 
   _showInsertionPoint: function(itemView, dropOperation) {
@@ -90,9 +95,9 @@ SoTech.TableListView = SC.ListView.extend(
 
   _cv_dragViewFor: function(dragContent) {
     // find only the indexes that are in both dragContent and nowShowing.
-    var indexes = this.get('nowShowing').without(dragContent);
-    indexes = this.get('nowShowing').without(indexes);
+    var indexes = this.get("nowShowing").without(dragContent);
+    indexes = this.get("nowShowing").without(indexes);
     // get a custom view from TableView
-    return this.parentView.parentView.parentView.parentView._tv_dragViewFor(indexes, this);
+    return this.get("table")._tv_dragViewFor(indexes, this);
   }
 });

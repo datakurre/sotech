@@ -1,4 +1,4 @@
-// Copyright 2008-2009 University of Jyväskylä
+// Copyright 2008-2011 University of Jyväskylä
 //
 // Authors:
 //     Asko Soukka <asko.soukka@iki.fi>

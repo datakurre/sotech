@@ -1,4 +1,4 @@
-# Copyright 2008-2009 University of Jyväskylä
+# Copyright 2008-2011 University of Jyväskylä
 #
 # Authors:
 #     Asko Soukka <asko.soukka@iki.fi>
@@ -28,6 +28,4 @@
 # some of these settings, you should make changes to your project Buildfile 
 # instead.
 
-config :all, :required => [:table_view]
-
-config :table_view, :required => [:endash]
+config :all, :required => []

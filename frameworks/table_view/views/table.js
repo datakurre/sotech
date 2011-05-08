@@ -1,4 +1,4 @@
-// Copyright 2008-2009 University of Jyväskylä
+// Copyright 2008-2011 University of Jyväskylä
 //
 // Authors:
 //     Asko Soukka <asko.soukka@iki.fi>
@@ -31,83 +31,91 @@ require("views/table_list");
 
   SoTech.TableView
 
-  @extends Endash.SplitView
+  @extends SC.View
 */
-SoTech.TableView = Endash.SplitView.extend(SC.Border,
+SoTech.TableView = SC.View.extend(
 /** @scope SoTech.TableView.prototype */ {
 
   classNames: "st-table-view".w(),
 
   headerView: SoTech.TableHeaderView,
-  
-  listView: SoTech.TableListView,
+  columnView: SoTech.TableListView,
 
   acceptsFirstResponder: YES,
-
   showAlternatingRows: YES,
 
   rowHeight: 18,
-
-  dividerThickness: 5,
-
-  dividerSpacing: 0,
   
-  contentValueWidths: [],
-  
-  contentValueAligns: [],
-  
-  contentValueKeys: [],
-  
-  contentOrderableBy: [],
-
-  localize: YES,
+  columnHeaders: [],
+  columnWidths: [],
+  columnAligns: [],
+  columnValueKeys: [],
+  columnOrderable: [],
   
   init: function() {
-    var contentValueWidths = this.get("contentValueWidths") || [], left = 0,
-        contentValueAligns = this.get("contentValueAligns") || [],
-        contentOrderableBy = this.get("contentOrderableBy") || [];
 
-    var columns = this.get("contentValueKeys").map( function(key) {
-      var width = contentValueWidths.shiftObject() || 150; left += width;
-      var align = contentValueAligns.shiftObject() || SC.ALIGN_LEFT;
-      var orderable = contentOrderableBy.shiftObject();
-      return { key: key, orderable: SC.none(orderable) ? YES : orderable,
-               left: left-width, width: width, align: align };
-    });
+    var offset = 0, index = 0, header, width, align, orderable,
 
-    var headerView = this.get("headerView");
-    var listView = this.get("listView");
-    var localize = this.get("localize");
+        columnHeaders = this.get("columnHeaders") || [],
+        columnWidths = this.get("columnWidths") || [],
+        columnAligns = this.get("columnAligns") || [],
+        columnValueKeys = this.get("columnValueKeys") || [],
+        columnOrderable = this.get("columnOrderable") || [],
+        headerView = this.get("headerView"),
+        columnView = this.get("columnView"),
+        
+        tableFromScroll = ".parentView.parentView",
+        tableFromColumn = ".parentView.parentView.parentView.parentView";
 
-    this["childViews"] = columns.map( function(column) {
+    this["childViews"] = columnValueKeys.map(function(key) {
+
+      header = columnHeaders.shiftObject() || "_%@".fmt(key).loc();
+      width = columnWidths.shiftObject() || 150; offset += width;
+      align = columnAligns.shiftObject() || SC.ALIGN_LEFT;
+      orderable = SC.none(columnOrderable.shiftObject()) ? YES : NO;
+      
+      index = index + 1;
+
       return SC.View.extend({
-        layout: { width: column.width, minWidth: 20,
-                  top: 0, bottom: 0, left: column.offset },
+
+        layout: index == columnValueKeys.get("length")
+          ? { top: 0, bottom: 0, left: offset-width, right: 0 }
+          : { top: 0, bottom: 0, left: offset-width, width: width },
+        useAbsoluteLayout: YES,
+
         childViews: "header rows".w(),
 
         header: headerView.extend({ 
-          layout: { height: 20, top: 0, right: 0, left: 0 },
-          sortKey: column.orderable ? column.key : null,
-          title: localize ? "_%@".fmt(column.key).loc() : column.key
+          layout: { height: 20, top: 0, right: 0, left: 0,
+                    borderBottom: 1, borderRight: 1 },
+          sortKey: orderable ? key : null, title: header
         }),
 
         rows: SC.ScrollView.extend({
-          layout: { top: 21, right: 0, bottom: 0, left: 0 },
-          borderStyle: SC.BORDER_NONE,
-          backgroundColor: "white",
-          classNames: columns.indexOf(column) < columns.get("length") - 1 ?
-                      "st-hide-scroll" : "st-show-scroll",
-          verticalScrollOffsetBinding: ".parentView.parentView.verticalScrollOffset",
+          layout: { top: 20, right: 0, bottom: 0, left: 0 },
+          classNames: index != columnValueKeys.get("length")
+                      ? "st-hide-scroll".w() : "st-show-scroll".w(),
 
-          contentView: columns.indexOf(column) === 0 ? listView.extend({
-            contentIconKeyBinding: ".parentView.parentView.parentView.parentView.contentIconKey",
-            hasContentIconBinding: ".parentView.parentView.parentView.parentView.hasContentIcon",
-            contentValueKey: column.key,
-            textAlign: column.align
-          }) : listView.extend({
-            classNames: "st-hide-disclosure",
-            contentValueKey: column.key,
-            textAlign: column.align
+          contentView: index > 1 ? columnView.extend({
+            classNames: "st-hide-disclosure".w(),
+            contentValueKey: key,
+            textAlign: align
+
+          }) : columnView.extend({
+            contentIconKeyBinding: "%@.contentIconKey".fmt(tableFromColumn),
+            hasContentIconBinding: "%@.hasContentIcon".fmt(tableFromColumn),
+            contentValueKey: key,
+            textAlign: align
+          }),
+
+          verticalScrollOffsetBinding: "%@.verticalScrollOffset".fmt(tableFromScroll),
+
+          horizontalScrollerView: SC.ScrollerView.design({
+            isEnabledBinding: "%@.parentView.isEnabled".fmt(tableFromScroll)
+          }),
+          
+          verticalScrollerView: SC.ScrollerView.design({
+            isEnabledBinding: "%@.parentView.isEnabled".fmt(tableFromScroll)
           })
         })
       });
@@ -115,26 +123,36 @@ SoTech.TableView = Endash.SplitView.extend(SC.Border,
     return sc_super();
   },
 
+  isEnabledObserver: function() {
+    if (this.get("isEnabled")) {
+      this.$().removeClass("disabled");
+    } else {
+      this.$().addClass("disabled");
+    }
+  }.observes("isEnabled"),
+
+  columnIndexes: function() {
+    var childViews = this.get("childViews");
+    return SC.IndexSet.create(0, childViews.get("length"))
+      .filter(function(i) { return !SC.none(childViews[i].rows); }, this);    
+  }.property().cacheable(),
+
   hasFirstResponder: function() {
-    return this.get("childViews").some( function(column) {
+    var childViews = this.get("childViews");
+    return childViews.some(function(column) {
       return !SC.none(column.rows) && column.rows.contentView.isFirstResponder;
     }, this);
   }.property(),
 
   didBecomeFirstResponder: function() {
-    this.$(".sc-list-view").addClass("focus");
-    this.get("childViews").firstObject().rows.contentView.becomeFirstResponder();
-    var selection = this.get("selection");
-    if (!SC.none(selection) && !selection.get("length")) {
-      this.set("selection", this.get("selection").copy().add(this.get("content"),0,1));
+    var selection = this.get("selection"),
+        childViews = this.get("childViews");
+    if (!SC.none(selection) && selection.get("length") === 0) {
+      this.set("selection", selection.copy().add(this.get("content"), 0, 1));
     }
+    this.$(".sc-list-view").addClass("focus");
+    childViews.firstObject().rows.contentView.becomeFirstResponder();
   },
-
-  columnIndexes: function() {
-    return SC.IndexSet.create(0, this.childViews.get("length")).filter(function(i) {
-      return !SC.none(this.childViews[i].rows);
-    }, this);    
-  }.property().cacheable(),
 
   showInsertionPoint: function(itemView, dropOperation) {
     this.get("columnIndexes").forEach(function(i) {

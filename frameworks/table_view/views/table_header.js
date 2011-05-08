@@ -1,4 +1,4 @@
-// Copyright 2008-2009 University of Jyväskylä
+// Copyright 2008-2011 University of Jyväskylä
 //
 // Authors:
 //     Asko Soukka <asko.soukka@iki.fi>
@@ -34,31 +34,37 @@ SoTech.TableHeaderView = SC.ButtonView.extend(
 /** @scope SoTech.TableHeaderView.prototype */ {
   classNames: "st-header-view".w(),
   theme: "disclosure",
+  acceptsFirstResponder: NO,
 
   sortKey: "guid",
   title: "guid",
 
+  isEnabledBinding: ".table.isEnabled",
+  
+  table: function() {
+    return this.getPath("parentView.parentView");
+  }.property().cacheable(),
+
   action: function() {
-    var sortKey = this.get("sortKey");
+    var sortKey = this.get("sortKey"),
+        table = this.get("table"),
+        orderBy = table.get("orderBy");
     if (sortKey) {
-      var orderBy = this.parentView.parentView.get("orderBy");
-      this.parentView.parentView.set("orderBy", (orderBy == sortKey ? "%@ DESC" : "%@").fmt(sortKey));
-      this.parentView.parentView.$(".st-header-view").removeClass("st-order-by");
+      table.set("orderBy", (orderBy == sortKey ? "DESC %@" : "%@").fmt(sortKey));
+      table.$(".st-header-view").removeClass("st-order-by");
     }
   },
 
   render: function(context, firstTime) {
+    var sortKey = this.get("sortKey"),
+        orderBy = this.getPath("table.orderBy");
+
     context.push('<img src="', SC.BLANK_IMAGE_URL, '" class="button" alt="" />');
     context.push("<label>",this.get("title"),"</label>");
 
-    var sortKey = this.get("sortKey");
-
     if (sortKey) {
       context.addClass("st-orderable");
-
-      var orderBy = this.parentView.parentView.get("orderBy");
-
-      if (!SC.none(orderBy) && orderBy.substring(0, sortKey.length) == sortKey) {
+      if (!SC.none(orderBy) && orderBy.replace(/^DESC\s/, "") == sortKey) {
         context.addClass("st-order-by");
         if (orderBy == sortKey) { context.removeClass("st-descending"); }
         else { context.addClass("st-descending"); }
