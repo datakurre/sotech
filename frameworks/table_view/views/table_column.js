@@ -26,12 +26,12 @@
 
 /** @class
 
-  SoTech.TableListView
+  SoTech.TableColumnView
 
   @extends SC.ListView
 */
-SoTech.TableListView = SC.ListView.extend(
-/** @scope SoTech.TableListView.prototype */ {
+SoTech.TableColumnView = SC.ListView.extend(
+/** @scope SoTech.TableColumnView.prototype */ {
   
   contentBinding: ".table.content",
   selectionBinding: ".table.selection",

@@ -25,7 +25,7 @@
 /*globals SoTech Endash*/
 
 require("views/table_header");
-require("views/table_list");
+require("views/table_column");
 
 /** @class
 
@@ -39,7 +39,7 @@ SoTech.TableView = SC.View.extend(
   classNames: "st-table-view".w(),
 
   headerView: SoTech.TableHeaderView,
-  columnView: SoTech.TableListView,
+  columnView: SoTech.TableColumnView,
 
   acceptsFirstResponder: YES,
   showAlternatingRows: YES,
@@ -97,20 +97,26 @@ SoTech.TableView = SC.View.extend(
                       ? "st-hide-scroll".w() : "st-show-scroll".w(),
 
           contentView: index == 1 ? columnView.extend({
+            // the leftmost column
             contentIconKeyBinding: "%@.contentIconKey".fmt(tableFromColumn),
             hasContentIconBinding: "%@.hasContentIcon".fmt(tableFromColumn),
             contentValueKey: key,
             textAlign: align
+            //
           }) : index != columnValueKeys.get("length") ? columnView.extend({
+            // all the middle columns
             classNames: "st-hide-disclosure".w(),
             contentValueKey: key,
             textAlign: align
+            //
           }) : columnView.extend({
+            // the rightmost column
             classNames: "st-hide-disclosure".w(),
             contentRightIconKeyBinding: "%@.contentRightIconKey".fmt(tableFromColumn),
             hasContentRightIconBinding: "%@.hasContentRightIcon".fmt(tableFromColumn),
             contentValueKey: key,
             textAlign: align
+            //
           }),
 
           verticalScrollOffsetBinding: "%@.verticalScrollOffset".fmt(tableFromScroll),
@@ -125,6 +131,7 @@ SoTech.TableView = SC.View.extend(
         })
       });
     }, this);
+
     return sc_super();
   },
 
