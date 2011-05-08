@@ -32,7 +32,7 @@
 */
 SoTech.TableColumnView = SC.ListView.extend(
 /** @scope SoTech.TableColumnView.prototype */ {
-  
+
   contentBinding: ".table.content",
   selectionBinding: ".table.selection",
 
@@ -99,5 +99,8 @@ SoTech.TableColumnView = SC.ListView.extend(
     indexes = this.get("nowShowing").without(indexes);
     // get a custom view from TableView
     return this.get("table")._tv_dragViewFor(indexes, this);
-  }
+  },
+
+  ghostActsLikeCursor: NO
+
 });

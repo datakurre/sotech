@@ -180,52 +180,64 @@ SoTech.TableView = SC.View.extend(
 
   // Modified from SC.CollectionView._cv_dragViewFor
   _tv_dragViewFor: function(indexes, context) {  
-    var dragLayer = this.get("layer").cloneNode(false);
-    var view = SC.View.create({ layer: dragLayer, parentView: this });
 
-    // cleanup weird stuff that might make the drag look out of place
-    SC.$(dragLayer).css("backgroundColor", "transparent")
-      .css("border", "none")
-      .css("top", context.parentView.parentView.layout.top)
-      .css("left", 0);
-  
-    // collect column indexes
-    var columnIndexes = this.get("columnIndexes");
+    var top = context.getPath("parentView.parentView.layout.top"),
+        scroll = this.get("verticalScrollOffset") || 0, offset;
+    
+    var columnIndexes = this.get("columnIndexes"),
+        itemView, isSelected, layer;
+
+    var view = SC.View.create({ 
+      // layer has the stuff that gets drawn in this hacky ghost...
+      layer: this.get("layer").cloneNode(false),
+      parentView: this
+    });
+
+    //  CSS cleanup
+    SC.$(view.get("layer")).css({
+      backgroundColor: "transparent", border: "none", left: 0
+    }).attr("id", null).find("*").attr("id", null);
 
     indexes.forEach(function(i) {
       columnIndexes.forEach(function(ci) {
-        var itemView = this.childViews[ci].rows.contentView.itemViewForContentIndex(i),
-            isSelected, layer;
+        itemView = this.childViews[ci].rows.contentView.itemViewForContentIndex(i);
 
         // render item view without isSelected state.  
         if (itemView) {
           isSelected = itemView.get("isSelected");
           itemView.set("isSelected", NO);
-
           itemView.updateLayerIfNeeded();
-          layer = itemView.get("layer");
-          if (layer) layer = layer.cloneNode(true);
 
-          // cleanup weird stuff that might make the drag look out of place
-          SC.$(layer).css("background-color", "transparent")
-                     .css("left", this.childViews[ci].layout.left)
-                     .css("width", this.childViews[ci].layout.width);
-          if (ci > 0) {
-            SC.$(layer).find("img.disclosure").remove();
-            SC.$(layer).find("label").css("left", 0);          
-            SC.$(layer).find(".sc-outline").css("left", 0);          
+          layer = itemView.get("layer");
+          if (!SC.none(layer)) {
+            layer = layer.cloneNode(true);
+
+            //  CSS cleanup
+            offset = parseInt(SC.$(layer).css("top").replace(/px$/,''), 10)
+                     + top - scroll;
+
+            SC.$(layer).css({
+              backgroundColor: "transparent",
+              left: this.childViews[ci].layout.left,
+              width: this.childViews[ci].layout.width,
+              top: offset
+            }).attr("id", null).find("*").attr("id", null);
+
+            if (ci > 0) {
+              SC.$(layer).find("label").css("left", 0);          
+              SC.$(layer).find("img.disclosure").remove();
+              SC.$(layer).find(".sc-outline").css("left", 0);          
+            }
+
+            if (layer) view.get("layer").appendChild(layer);
           }
 
           itemView.set("isSelected", isSelected);
           itemView.updateLayerIfNeeded();
         }
-
-        if (layer) dragLayer.appendChild(layer);
-        layer = null;      
       }, this);
     }, this);
 
-    dragLayer = null;
     return view;
   }
 });
