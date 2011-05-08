@@ -96,14 +96,19 @@ SoTech.TableView = SC.View.extend(
           classNames: index != columnValueKeys.get("length")
                       ? "st-hide-scroll".w() : "st-show-scroll".w(),
 
-          contentView: index > 1 ? columnView.extend({
+          contentView: index == 1 ? columnView.extend({
+            contentIconKeyBinding: "%@.contentIconKey".fmt(tableFromColumn),
+            hasContentIconBinding: "%@.hasContentIcon".fmt(tableFromColumn),
+            contentValueKey: key,
+            textAlign: align
+          }) : index != columnValueKeys.get("length") ? columnView.extend({
             classNames: "st-hide-disclosure".w(),
             contentValueKey: key,
             textAlign: align
-
           }) : columnView.extend({
-            contentIconKeyBinding: "%@.contentIconKey".fmt(tableFromColumn),
-            hasContentIconBinding: "%@.hasContentIcon".fmt(tableFromColumn),
+            classNames: "st-hide-disclosure".w(),
+            contentRightIconKeyBinding: "%@.contentRightIconKey".fmt(tableFromColumn),
+            hasContentRightIconBinding: "%@.hasContentRightIcon".fmt(tableFromColumn),
             contentValueKey: key,
             textAlign: align
           }),
