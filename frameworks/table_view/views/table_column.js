@@ -53,6 +53,10 @@ SoTech.TableColumnView = SC.ListView.extend(
 
   textAlign: SC.ALIGN_LEFT,
 
+  dragContentBinding: ".table.dragContent",
+  proposedInsertionIndexBinding: ".table.proposedInsertionIndex",
+  proposedDropOperationBinding: ".table.proposedDropOperation",
+
   exampleView: SC.ListItemView.extend({
     textAlignBinding: ".parentView.textAlign",
     render: function(context, firstTime) { sc_super();
@@ -68,6 +72,35 @@ SoTech.TableColumnView = SC.ListView.extend(
   render: function(context, firstTime) { sc_super();
     context.setClass("focus", this.getPath("table.hasFirstResponder"));
   },
+  
+  moveRight: function() {
+    var columns = this.getPath("table.childViews"),
+        index = columns.indexOf(this.getPath("parentView.parentView.parentView"));
+    if (index < columns.get("length") - 1) {
+      columns[index + 1].rows.contentView.becomeFirstResponder();
+    }
+  },
+  
+  moveLeft: function() {
+    var columns = this.getPath("table.childViews"),
+        index = columns.indexOf(this.getPath("parentView.parentView.parentView"));
+    if (index > 0) {
+      columns[index - 1].rows.contentView.becomeFirstResponder();
+    }
+  },
+
+  selectionChanged: function() {
+    var sel = this.get("selection"),
+        editable = this.get("canEditContent");
+    if (editable && this.get("isFirstResponder")
+        && !SC.none(sel) && sel.get("length") == 1) {
+      this.get("classNames").pushObject("st-cursor");
+      this.$().addClass("st-cursor");
+    } else {
+      this.set("classNames", this.get("classNames").without("st-cursor"));
+      this.$().removeClass("st-cursor");
+    }
+  }.observes("selection", "isFirstResponder"),
 
   didBecomeFirstResponder: function() { sc_super();
     this.get("table").$(".sc-list-view").addClass("focus");
@@ -76,6 +109,10 @@ SoTech.TableColumnView = SC.ListView.extend(
   willLoseFirstResponder: function() { sc_super();
     this.get("table").$(".sc-list-view").removeClass("focus");
   },
+
+  reorderDataType: function() {
+    return this.getPath("table.reorderDataType");
+  }.property().cacheable(),
 
   showInsertionPoint: function(itemView, dropOperation) {
     this.get("table").showInsertionPoint(itemView, dropOperation);

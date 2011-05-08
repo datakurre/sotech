@@ -38,6 +38,9 @@
       }
     }
   }
+  .st-cursor .sc-list-item-view.sel {
+    outline: 1px dotted black;
+  }
   .st-hide-scroll {
     .sc-scroller-view {
       display: none !important;

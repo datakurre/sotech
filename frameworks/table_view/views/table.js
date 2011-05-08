@@ -52,6 +52,10 @@ SoTech.TableView = SC.View.extend(
   columnValueKeys: [],
   columnOrderable: [],
   
+  dragContent: null,
+  proposedInsertionIndex: null,
+  proposedDropOperation: null,
+
   init: function() {
 
     var offset = 0, index = 0, header, width, align, orderable,
@@ -143,6 +147,10 @@ SoTech.TableView = SC.View.extend(
     }
   }.observes("isEnabled"),
 
+  reorderDataType: function() {
+    return "SoTech.TableView.Reorder.%@".fmt(SC.guidFor(this));
+  }.property().cacheable(),
+  
   columnIndexes: function() {
     var childViews = this.get("childViews");
     return SC.IndexSet.create(0, childViews.get("length"))
