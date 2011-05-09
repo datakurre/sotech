@@ -76,7 +76,7 @@ SoTech.TableView = SC.View.extend(
       header = columnHeaders.shiftObject() || "_%@".fmt(key).loc();
       width = columnWidths.shiftObject() || 150; offset += width;
       align = columnAligns.shiftObject() || SC.ALIGN_LEFT;
-      orderable = SC.none(columnOrderable.shiftObject()) ? YES : NO;
+      orderable = columnOrderable.shiftObject() ? YES : NO;
       
       index = index + 1;
 

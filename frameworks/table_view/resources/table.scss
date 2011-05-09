@@ -25,8 +25,8 @@
         width: 9px;
         height: 19px;
         top: 0px;
-        left: 5px;
-        right: auto;
+        right: 5px;
+        left: auto;
       }
 
       &.st-order-by img {
@@ -37,6 +37,9 @@
         background-image: sc_static("sort-descending.png");
       }
     }
+  }
+  > .sc-view:last-child .st-header-view img {
+    right: 15px;
   }
   .st-cursor .sc-list-item-view.sel .sc-outline:after {
     position: absolute;
