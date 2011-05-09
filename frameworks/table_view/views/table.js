@@ -139,14 +139,6 @@ SoTech.TableView = SC.View.extend(
     return sc_super();
   },
 
-  isEnabledObserver: function() {
-    if (this.get("isEnabled")) {
-      this.$().removeClass("disabled");
-    } else {
-      this.$().addClass("disabled");
-    }
-  }.observes("isEnabled"),
-
   reorderDataType: function() {
     return "SoTech.TableView.Reorder.%@".fmt(SC.guidFor(this));
   }.property().cacheable(),
@@ -156,6 +148,19 @@ SoTech.TableView = SC.View.extend(
     return SC.IndexSet.create(0, childViews.get("length"))
       .filter(function(i) { return !SC.none(childViews[i].rows); }, this);    
   }.property().cacheable(),
+
+  selectionChanged: function() {
+    var sel = this.get("selection"),
+        editable = this.get("canEditContent");
+    if (!editable && this.get("hasFirstResponder")
+        && !SC.none(sel) && sel.get("length") == 1) {
+      this.get("classNames").pushObject("st-cursor");
+      this.$().addClass("st-cursor");
+    } else {
+      this.set("classNames", this.get("classNames").without("st-cursor"));
+      this.$().removeClass("st-cursor");
+    }
+  }.observes("selection", "hasFirstResponder"),
 
   hasFirstResponder: function() {
     var childViews = this.get("childViews");

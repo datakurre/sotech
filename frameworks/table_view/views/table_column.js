@@ -104,10 +104,12 @@ SoTech.TableColumnView = SC.ListView.extend(
 
   didBecomeFirstResponder: function() { sc_super();
     this.get("table").$(".sc-list-view").addClass("focus");
+    this.get("table").propertyDidChange("hasFirstResponder");
   },
 
   willLoseFirstResponder: function() { sc_super();
     this.get("table").$(".sc-list-view").removeClass("focus");
+    this.get("table").propertyDidChange("hasFirstResponder");
   },
 
   reorderDataType: function() {

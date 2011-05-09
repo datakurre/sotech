@@ -41,6 +41,42 @@
   > .sc-view:last-child .st-header-view img {
     right: 15px;
   }
+
+  &.st-cursor .sc-list-view.focus .sc-list-item-view.sel .sc-outline:after  {
+    position: absolute;
+    content: "";
+    top: 1px;
+    right: 1px;
+    bottom: 1px;
+    left: 0;
+    border-top: 1px dotted white;
+    border-bottom: 1px dotted white;
+  }
+
+  &.st-cursor > .sc-view:first-child .sc-list-view.focus .sc-list-item-view.sel .sc-outline:after  {
+    position: absolute;
+    content: "";
+    top: 1px;
+    right: 1px;
+    bottom: 1px;
+    left: 0;
+    border-top: 1px dotted white;
+    border-bottom: 1px dotted white;
+    border-left: 1px dotted white;
+  }
+
+  &.st-cursor > .sc-view:last-child .sc-list-view.focus .sc-list-item-view.sel .sc-outline:after  {
+    position: absolute;
+    content: "";
+    top: 1px;
+    right: 1px;
+    bottom: 1px;
+    left: 0;
+    border-top: 1px dotted white;
+    border-right: 1px dotted white;
+    border-bottom: 1px dotted white;
+  }
+
   .st-cursor .sc-list-item-view.sel .sc-outline:after {
     position: absolute;
     content: "";
