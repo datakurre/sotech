@@ -45,13 +45,13 @@ SoTech.TableView = SC.View.extend(
   showAlternatingRows: YES,
 
   rowHeight: 18,
-  
+
   columnHeaders: [],
   columnWidths: [],
   columnAligns: [],
   columnValueKeys: [],
   columnOrderable: [],
-  
+
   dragContent: null,
   proposedInsertionIndex: null,
   proposedDropOperation: null,
@@ -67,29 +67,29 @@ SoTech.TableView = SC.View.extend(
         columnOrderable = this.get("columnOrderable") || [],
         headerView = this.get("headerView"),
         columnView = this.get("columnView"),
-        
+
         tableFromScroll = ".parentView.parentView",
         tableFromColumn = ".parentView.parentView.parentView.parentView";
 
-    this["childViews"] = columnValueKeys.map(function(key) {
+    this.childViews = columnValueKeys.map(function(key) {
 
       header = columnHeaders.shiftObject() || "_%@".fmt(key).loc();
       width = columnWidths.shiftObject() || 150; offset += width;
       align = columnAligns.shiftObject() || SC.ALIGN_LEFT;
       orderable = columnOrderable.shiftObject() ? YES : NO;
-      
+
       index = index + 1;
 
       return SC.View.extend({
 
-        layout: index == columnValueKeys.get("length")
+        layout: index === columnValueKeys.get("length")
           ? { top: 0, bottom: 0, left: offset-width, right: 0 }
           : { top: 0, bottom: 0, left: offset-width, width: width },
         useAbsoluteLayout: YES,
 
         childViews: "header rows".w(),
 
-        header: headerView.extend({ 
+        header: headerView.extend({
           layout: { height: 20, top: 0, right: 0, left: 0,
                     borderBottom: 1, borderRight: 1 },
           sortKey: orderable ? key : null, title: header
@@ -97,17 +97,17 @@ SoTech.TableView = SC.View.extend(
 
         rows: SC.ScrollView.extend({
           layout: { top: 20, right: 0, bottom: 0, left: 0 },
-          classNames: index != columnValueKeys.get("length")
+          classNames: index !== columnValueKeys.get("length")
                       ? "st-hide-scroll".w() : "st-show-scroll".w(),
 
-          contentView: index == 1 ? columnView.extend({
+          contentView: index === 1 ? columnView.extend({
             // the leftmost column
             contentIconKeyBinding: "%@.contentIconKey".fmt(tableFromColumn),
             hasContentIconBinding: "%@.hasContentIcon".fmt(tableFromColumn),
             contentValueKey: key,
             textAlign: align
             //
-          }) : index != columnValueKeys.get("length") ? columnView.extend({
+          }) : index !== columnValueKeys.get("length") ? columnView.extend({
             // all the middle columns
             classNames: "st-hide-disclosure".w(),
             contentValueKey: key,
@@ -128,7 +128,7 @@ SoTech.TableView = SC.View.extend(
           horizontalScrollerView: SC.ScrollerView.design({
             isEnabledBinding: "%@.parentView.isEnabled".fmt(tableFromScroll)
           }),
-          
+
           verticalScrollerView: SC.ScrollerView.design({
             isEnabledBinding: "%@.parentView.isEnabled".fmt(tableFromScroll)
           })
@@ -142,18 +142,18 @@ SoTech.TableView = SC.View.extend(
   reorderDataType: function() {
     return "SoTech.TableView.Reorder.%@".fmt(SC.guidFor(this));
   }.property().cacheable(),
-  
+
   columnIndexes: function() {
     var childViews = this.get("childViews");
     return SC.IndexSet.create(0, childViews.get("length"))
-      .filter(function(i) { return !SC.none(childViews[i].rows); }, this);    
+      .filter(function(i) { return !SC.none(childViews[i].rows); }, this);
   }.property().cacheable(),
 
   selectionChanged: function() {
     var sel = this.get("selection"),
         editable = this.get("canEditContent");
     if (!editable && this.get("hasFirstResponder")
-        && !SC.none(sel) && sel.get("length") == 1) {
+        && !SC.none(sel) && sel.get("length") === 1) {
       this.get("classNames").pushObject("st-cursor");
       this.$().addClass("st-cursor");
     } else {
@@ -192,15 +192,15 @@ SoTech.TableView = SC.View.extend(
   },
 
   // Modified from SC.CollectionView._cv_dragViewFor
-  _tv_dragViewFor: function(indexes, context) {  
+  _tv_dragViewFor: function(indexes, context) {
 
     var top = context.getPath("parentView.parentView.layout.top"),
         scroll = this.get("verticalScrollOffset") || 0, offset;
-    
+
     var columnIndexes = this.get("columnIndexes"),
         itemView, isSelected, layer;
 
-    var view = SC.View.create({ 
+    var view = SC.View.create({
       // layer has the stuff that gets drawn in this hacky ghost...
       layer: this.get("layer").cloneNode(false),
       parentView: this
@@ -215,7 +215,7 @@ SoTech.TableView = SC.View.extend(
       columnIndexes.forEach(function(ci) {
         itemView = this.childViews[ci].rows.contentView.itemViewForContentIndex(i);
 
-        // render item view without isSelected state.  
+        // render item view without isSelected state.
         if (itemView) {
           isSelected = itemView.get("isSelected");
           itemView.set("isSelected", NO);
@@ -237,12 +237,14 @@ SoTech.TableView = SC.View.extend(
             }).attr("id", null).find("*").attr("id", null);
 
             if (ci > 0) {
-              SC.$(layer).find("label").css("left", 0);          
+              SC.$(layer).find("label").css("left", 0);
               SC.$(layer).find("img.disclosure").remove();
-              SC.$(layer).find(".sc-outline").css("left", 0);          
+              SC.$(layer).find(".sc-outline").css("left", 0);
             }
 
-            if (layer) view.get("layer").appendChild(layer);
+            if (layer) {
+              view.get("layer").appendChild(layer);
+            }
           }
 
           itemView.set("isSelected", isSelected);

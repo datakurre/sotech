@@ -72,7 +72,7 @@ SoTech.TableColumnView = SC.ListView.extend(
   render: function(context, firstTime) { sc_super();
     context.setClass("focus", this.getPath("table.hasFirstResponder"));
   },
-  
+
   moveRight: function() {
     var columns = this.getPath("table.childViews"),
         index = columns.indexOf(this.getPath("parentView.parentView.parentView"));
@@ -80,7 +80,7 @@ SoTech.TableColumnView = SC.ListView.extend(
       columns[index + 1].rows.contentView.becomeFirstResponder();
     }
   },
-  
+
   moveLeft: function() {
     var columns = this.getPath("table.childViews"),
         index = columns.indexOf(this.getPath("parentView.parentView.parentView"));
@@ -93,7 +93,7 @@ SoTech.TableColumnView = SC.ListView.extend(
     var sel = this.get("selection"),
         editable = this.get("canEditContent");
     if (editable && this.get("isFirstResponder")
-        && !SC.none(sel) && sel.get("length") == 1) {
+        && !SC.none(sel) && sel.get("length") === 1) {
       this.get("classNames").pushObject("st-cursor");
       this.$().addClass("st-cursor");
     } else {

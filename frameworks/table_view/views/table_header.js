@@ -40,7 +40,7 @@ SoTech.TableHeaderView = SC.ButtonView.extend(
   title: "guid",
 
   isEnabledBinding: ".table.isEnabled",
-  
+
   table: function() {
     return this.getPath("parentView.parentView");
   }.property().cacheable(),
@@ -50,7 +50,7 @@ SoTech.TableHeaderView = SC.ButtonView.extend(
         table = this.get("table"),
         orderBy = table.get("orderBy");
     if (sortKey) {
-      table.set("orderBy", (orderBy == sortKey ? "DESC %@" : "%@").fmt(sortKey));
+      table.set("orderBy", (orderBy === sortKey ? "DESC %@" : "%@").fmt(sortKey));
       table.$(".st-header-view").removeClass("st-order-by");
     }
   },
@@ -64,9 +64,9 @@ SoTech.TableHeaderView = SC.ButtonView.extend(
 
     if (sortKey) {
       context.addClass("st-orderable");
-      if (!SC.none(orderBy) && orderBy.replace(/^DESC\s/, "") == sortKey) {
+      if (!SC.none(orderBy) && orderBy.replace(/^DESC\s/, "") === sortKey) {
         context.addClass("st-order-by");
-        if (orderBy == sortKey) { context.removeClass("st-descending"); }
+        if (orderBy === sortKey) { context.removeClass("st-descending"); }
         else { context.addClass("st-descending"); }
       }
     }
