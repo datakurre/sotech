@@ -86,6 +86,10 @@
     left: 0;
     border: 1px dotted white;
   }
+  .sc-list-insertion-point {
+    left: 0px !important;
+    background-color: #888888;
+  }
   .st-hide-scroll {
     .sc-scroller-view {
       display: none !important;
