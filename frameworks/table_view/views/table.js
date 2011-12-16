@@ -56,6 +56,8 @@ SoTech.TableView = SC.View.extend(
   proposedInsertionIndex: null,
   proposedDropOperation: null,
 
+  _lastFirstResponderIndex: 0,
+
   init: function() {
 
     var offset = 0, index = 0, header, width, align, orderable,
@@ -176,7 +178,16 @@ SoTech.TableView = SC.View.extend(
       this.set("selection", selection.copy().add(this.get("content"), 0, 1));
     }
     this.$(".sc-list-view").addClass("focus");
-    childViews.firstObject().rows.contentView.becomeFirstResponder();
+    if(!childViews[this._lastFirstResponderIndex].rows.contentView.isFirstResponder) {
+      childViews[this._lastFirstResponderIndex].rows.contentView.becomeFirstResponder();
+    } else {
+      if (this._lastFirstResponderIndex < childViews.get("length") - 1) {
+        childViews[this._lastFirstResponderIndex + 1].rows.contentView.becomeFirstResponder();
+      } else {
+        childViews.firstObject().rows.contentView.becomeFirstResponder();
+        childViews.firstObject().rows.contentView.moveDown();
+      }
+    }
   },
 
   showInsertionPoint: function(itemView, dropOperation) {

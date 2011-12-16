@@ -103,6 +103,10 @@ SoTech.TableColumnView = SC.ListView.extend(
   }.observes("selection", "isFirstResponder"),
 
   didBecomeFirstResponder: function() { sc_super();
+    var columns = this.getPath("table.childViews"),
+        index = columns.indexOf(this.getPath("parentView.parentView.parentView"));
+    this.get("table")._lastFirstResponderIndex = index;
+
     this.get("table").$(".sc-list-view").addClass("focus");
     this.get("table").propertyDidChange("hasFirstResponder");
   },
