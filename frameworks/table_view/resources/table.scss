@@ -86,10 +86,16 @@
     left: 0;
     border: 1px dotted white;
   }
+
+  .sc-list-item-view .sc-outline label {
+    z-index: 1;  // raise label above the focus ring
+  }
+
   .sc-list-insertion-point {
     left: 0px !important;
     background-color: #888888;
   }
+
   .st-hide-scroll {
     .sc-scroller-view {
       display: none !important;
@@ -98,6 +104,7 @@
       right: 0px !important;
     }
   }
+
   .st-hide-disclosure {
     .sc-outline {
       left: 0 !important;
